@@ -20,6 +20,7 @@ import type {
   IntegrationCapabilities,
   ModerationRestriction,
   RiskAssessment,
+  RoomRole,
   TalkinEvent,
   UserWindowState,
 } from '@talkinshield/core';
@@ -266,6 +267,22 @@ export interface TalkinPlatformAdapter {
     reason: string;
     evidenceKeys: readonly string[];
   }): Promise<PlatformActionResult>;
+
+  /**
+   * The requester's role in a room, as the PLATFORM sees it.
+   *
+   * This is the authority source for room-wide actions, and the anti-forgery
+   * control: a participant cannot elevate themselves by sending a room-wide
+   * request, because their role is resolved here from the platform, not from
+   * the request. Returns `PARTICIPANT` when the platform cannot confirm an
+   * operator role — least privilege by default. Optional: when an integration
+   * does not expose roles, the service treats everyone as a participant, so
+   * only local protections are offered.
+   */
+  getRoomRole?(roomId: string, userId: string): Promise<RoomRole>;
+
+  /** Whether a target is also a room operator, for the mod-vs-mod guard. */
+  isRoomOperator?(roomId: string, userId: string): Promise<boolean>;
 }
 
 export type PlatformActionResult =

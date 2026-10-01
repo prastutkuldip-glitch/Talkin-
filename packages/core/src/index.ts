@@ -46,6 +46,9 @@ export * from './evidence/record.ts';
 // Personal Shield — protection scoped to the requesting user only
 export * from './shield/personal-shield.ts';
 
+// Room roles — who may silence a speaker, and for whom
+export * from './shield/room-roles.ts';
+
 // Pipeline
 export * from './pipeline/analyze.ts';
 export * from './pipeline/incident.ts';

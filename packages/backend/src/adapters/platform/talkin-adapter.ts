@@ -28,6 +28,7 @@ import type {
   HiddenPresenceRecord,
   IntegrationCapabilities,
   ModerationRestriction,
+  RoomRole,
 } from '@talkinshield/core';
 import { NO_CAPABILITIES } from '@talkinshield/core';
 
@@ -82,6 +83,16 @@ export class NoopTalkinAdapter implements TalkinPlatformAdapter {
         'No official Talkin reporting endpoint is configured. The evidence bundle has still been preserved and can be submitted manually.',
     };
   }
+
+  async getRoomRole(): Promise<RoomRole> {
+    // With no integration, we cannot confirm any operator role. Least
+    // privilege: everyone is a participant, so only local protections apply.
+    return 'PARTICIPANT';
+  }
+
+  async isRoomOperator(): Promise<boolean> {
+    return false;
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -95,6 +106,8 @@ export interface MockState {
   muted: Array<{ userId: string; roomId: string; until: number; reason: string }>;
   blocked: Array<{ userId: string; roomId?: string; until: number; reason: string }>;
   reports: Array<{ userId: string; reason: string; evidenceKeys: readonly string[] }>;
+  /** Room role per `${roomId}:${userId}`; absent means PARTICIPANT. */
+  roomRoles: Map<string, RoomRole>;
 }
 
 export function emptyMockState(): MockState {
@@ -105,6 +118,7 @@ export function emptyMockState(): MockState {
     muted: [],
     blocked: [],
     reports: [],
+    roomRoles: new Map(),
   };
 }
 
@@ -205,6 +219,15 @@ export class MockTalkinAdapter implements TalkinPlatformAdapter {
       evidenceKeys: input.evidenceKeys,
     });
     return { ok: true, reference: `mock-report-${this.state.reports.length}` };
+  }
+
+  async getRoomRole(roomId: string, userId: string): Promise<RoomRole> {
+    return this.state.roomRoles.get(`${roomId}:${userId}`) ?? 'PARTICIPANT';
+  }
+
+  async isRoomOperator(roomId: string, userId: string): Promise<boolean> {
+    const role = this.state.roomRoles.get(`${roomId}:${userId}`) ?? 'PARTICIPANT';
+    return role === 'OWNER' || role === 'MODERATOR';
   }
 }
 
@@ -413,6 +436,26 @@ export class HttpTalkinAdapter implements TalkinPlatformAdapter {
       ok: true,
       ...(typeof result.data.reference === 'string' ? { reference: result.data.reference } : {}),
     };
+  }
+
+  async getRoomRole(roomId: string, userId: string): Promise<RoomRole> {
+    // Resolved from the platform's view of the room. When the real contract is
+    // connected, map its role field here. On any failure we fall back to
+    // PARTICIPANT — least privilege — so an API error can never silently grant
+    // operator powers.
+    const result = await this.call<{ role?: unknown }>(
+      'GET',
+      `/rooms/${encodeURIComponent(roomId)}/members/${encodeURIComponent(userId)}/role`,
+    );
+    if (!result.ok) return 'PARTICIPANT';
+    const role = result.data.role;
+    if (role === 'OWNER' || role === 'MODERATOR' || role === 'PARTICIPANT') return role;
+    return 'PARTICIPANT';
+  }
+
+  async isRoomOperator(roomId: string, userId: string): Promise<boolean> {
+    const role = await this.getRoomRole(roomId, userId);
+    return role === 'OWNER' || role === 'MODERATOR';
   }
 }
 
