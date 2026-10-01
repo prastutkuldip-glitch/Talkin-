@@ -1,0 +1,35 @@
+{
+  "name": "talkinshield",
+  "version": "1.0.0",
+  "private": true,
+  "description": "TalkinShield — defensive abuse-detection, moderation and incident-response platform for voice-chat applications.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "engines": {
+    "node": ">=22.6.0"
+  },
+  "workspaces": [
+    "packages/core",
+    "packages/backend",
+    "packages/mocks",
+    "packages/frontend",
+    "packages/infra"
+  ],
+  "scripts": {
+    "test": "node --test --experimental-strip-types --conditions=development \"packages/core/test/**/*.test.ts\" \"packages/backend/test/**/*.test.ts\" \"packages/mocks/test/**/*.test.ts\"",
+    "test:core": "node --test --experimental-strip-types --conditions=development \"packages/core/test/**/*.test.ts\"",
+    "test:backend": "node --test --experimental-strip-types --conditions=development \"packages/backend/test/**/*.test.ts\"",
+    "test:mocks": "node --test --experimental-strip-types --conditions=development \"packages/mocks/test/**/*.test.ts\"",
+    "typecheck": "tsc -b packages/core packages/backend packages/mocks packages/infra",
+    "typecheck:all": "npm run typecheck && npm -w @talkinshield/frontend run typecheck",
+    "lint": "eslint packages --ext .ts,.tsx",
+    "build": "npm -w @talkinshield/core run build && npm -w @talkinshield/backend run build && npm -w @talkinshield/frontend run build",
+    "mock:stream": "node --experimental-strip-types --conditions=development packages/mocks/src/cli.ts",
+    "dev:frontend": "npm -w @talkinshield/frontend run dev",
+    "cdk": "npm -w @talkinshield/infra run cdk"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "typescript": "^5.9.2"
+  }
+}

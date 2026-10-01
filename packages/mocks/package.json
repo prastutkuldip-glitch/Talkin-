@@ -1,0 +1,19 @@
+{
+  "name": "@talkinshield/mocks",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Deterministic mock Talkin event generator — lets the whole system be exercised without touching Talkin infrastructure.",
+  "bin": {
+    "talkinshield-mock": "./src/cli.ts"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "clean": "rm -rf dist *.tsbuildinfo",
+    "test": "node --test --experimental-strip-types \"test/**/*.test.ts\"",
+    "generate": "node --experimental-strip-types src/cli.ts"
+  },
+  "dependencies": {
+    "@talkinshield/core": "*"
+  }
+}

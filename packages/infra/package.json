@@ -1,0 +1,22 @@
+{
+  "name": "@talkinshield/infra",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "AWS CDK infrastructure for TalkinShield.",
+  "scripts": {
+    "build": "tsc -b",
+    "clean": "rm -rf dist cdk.out *.tsbuildinfo",
+    "cdk": "cdk",
+    "synth": "cdk synth",
+    "diff": "cdk diff",
+    "deploy": "cdk deploy --all --require-approval broadening"
+  },
+  "dependencies": {
+    "aws-cdk-lib": "^2.173.0",
+    "constructs": "^10.4.2"
+  },
+  "devDependencies": {
+    "aws-cdk": "^2.173.0"
+  }
+}

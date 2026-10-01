@@ -1,0 +1,26 @@
+{
+  "name": "@talkinshield/backend",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "TalkinShield backend: ingestion, analysis, moderation and query APIs as AWS Lambda handlers.",
+  "scripts": {
+    "build": "tsc -b",
+    "clean": "rm -rf dist *.tsbuildinfo",
+    "test": "node --test --experimental-strip-types \"test/**/*.test.ts\""
+  },
+  "dependencies": {
+    "@talkinshield/core": "*",
+    "@aws-sdk/client-bedrock-runtime": "^3.705.0",
+    "@aws-sdk/client-dynamodb": "^3.705.0",
+    "@aws-sdk/client-eventbridge": "^3.705.0",
+    "@aws-sdk/client-s3": "^3.705.0",
+    "@aws-sdk/client-secrets-manager": "^3.705.0",
+    "@aws-sdk/client-sns": "^3.705.0",
+    "@aws-sdk/client-transcribe": "^3.705.0",
+    "@aws-sdk/lib-dynamodb": "^3.705.0"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.146"
+  }
+}

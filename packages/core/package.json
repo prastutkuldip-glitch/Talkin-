@@ -1,0 +1,26 @@
+{
+  "name": "@talkinshield/core",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Pure, dependency-free detection, risk-scoring and evidence logic for TalkinShield.",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "development": "./src/index.ts",
+      "default": "./dist/index.js"
+    },
+    "./types": {
+      "types": "./dist/types/index.d.ts",
+      "development": "./src/types/index.ts",
+      "default": "./dist/types/index.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -b",
+    "clean": "rm -rf dist *.tsbuildinfo",
+    "test": "node --test --experimental-strip-types \"test/**/*.test.ts\""
+  }
+}

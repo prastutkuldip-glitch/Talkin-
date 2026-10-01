@@ -1,0 +1,22 @@
+{
+  "app": "node --experimental-strip-types bin/app.ts",
+  "watch": {
+    "include": ["**"],
+    "exclude": ["README.md", "cdk*.json", "dist", "cdk.out", "node_modules"]
+  },
+  "context": {
+    "stage": "dev",
+
+    "@aws-cdk/aws-lambda:recognizeLayerVersion": true,
+    "@aws-cdk/core:checkSecretUsage": true,
+    "@aws-cdk/core:target-partitions": ["aws"],
+    "@aws-cdk/aws-iam:minimizePolicies": true,
+    "@aws-cdk/core:validateSnapshotRemovalPolicy": true,
+    "@aws-cdk/aws-apigateway:disableCloudWatchRole": true,
+    "@aws-cdk/aws-s3:createDefaultLoggingPolicy": true,
+    "@aws-cdk/aws-sns-subscriptions:restrictSqsDescryption": true,
+    "@aws-cdk/aws-kms:aliasNameRef": true,
+    "@aws-cdk/aws-dynamodb:resourcePolicyPerReplica": true,
+    "@aws-cdk/aws-lambda:useCdkManagedLogGroup": false
+  }
+}
