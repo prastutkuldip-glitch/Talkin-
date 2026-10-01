@@ -43,6 +43,9 @@ export * from './response/policy.ts';
 // Evidence
 export * from './evidence/record.ts';
 
+// Personal Shield — protection scoped to the requesting user only
+export * from './shield/personal-shield.ts';
+
 // Pipeline
 export * from './pipeline/analyze.ts';
 export * from './pipeline/incident.ts';
